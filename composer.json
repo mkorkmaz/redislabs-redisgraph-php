@@ -1,5 +1,5 @@
 {
-    "name": "mkorkmaz/redisgraph-php",
+    "name": "mkorkmaz/redislabs-redisgraph-php",
     "description": "PHP Client for Redislabs Redis Graph Module.",
     "type": "library",
     "license": "MIT",
