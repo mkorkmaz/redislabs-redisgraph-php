@@ -155,13 +155,13 @@ $result->prettyPrint();
 This library does not provide Query Builder, but you can use **mper/cypher-querybuilder**
 
 
-Install the library.
+#### 1. Install the library.
 
 ```bash
 composer require mper/cypher-querybuilder
 ```
 
-Then build your query
+#### 2. Then build your query
 
 ```php
 <?php
