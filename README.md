@@ -109,9 +109,9 @@ $commitQuery = $graph->getCommitQuery();
 
 $result = $redisGraph->commit($commitQuery);
 
-var_dump(result->getLabelsAdded()); // int(2)
+var_dump($result->getLabelsAdded()); // int(2)
 var_dump($result->getNodesCreated()); // int(2)
-var_dump(result->getLabelsAdded()); // int(2)
+var_dump($result->getLabelsAdded()); // int(2)
 var_dump($result->getNodesDeleted()); // int(0)
 var_dump($result->getRelationshipsCreated()); // int(1)
 var_dump($result->getRelationshipsDeleted()); // int(0)
