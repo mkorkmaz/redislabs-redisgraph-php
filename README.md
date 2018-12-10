@@ -150,6 +150,39 @@ $result->prettyPrint();
 
 ```
 
+### Cypher Query Builder
+
+This library does not provide Query Builder, but you can use **mper/cypher-querybuilder**
+
+
+Install the library.
+
+```bash
+composer require mper/cypher-querybuilder
+```
+
+Then build your query
+
+```php
+<?php
+
+use MP\Cypher\QueryBuilder;
+
+$queryBuilder = new QueryBuilder();
+
+$queryBuilder->addMatch()
+    ->addNode('p', 'person')
+    ->relation('v', 'visited', ['purpose'=>'pleasure'])->right()
+    ->node('c', 'country');
+
+$matchQueryString = $queryBuilder->getQuery('p.name', 'p.age', 'v.purpose', 'c.name');
+
+echo $matchQueryString; 
+
+// Prints "MATCH (p:person)-[v:visited {purpose:'pleasure'}]->(c:country) RETURN p.name,p.age,v.purpose,c.name"
+
+```
+
 
 ## Test and Development
 
