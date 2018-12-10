@@ -11,13 +11,13 @@ final class Query extends CommandAbstract implements CommandInterface
 {
     protected static $command = 'GRAPH.QUERY';
 
-    private function __construct(QueryInterface $query)
+    private function __construct(string $name, string $queryString)
     {
-        $this->arguments = [$query->getName(), $query->getQueryString()];
+        $this->arguments = [$name, $queryString];
     }
 
     public static function createCommandWithArguments(QueryInterface $query) : CommandInterface
     {
-        return new self($query);
+        return new self($query->getName(), $query->getQueryString());
     }
 }
