@@ -1,0 +1,47 @@
+{
+    "name": "mkorkmaz/redislabs-redisgraph-php",
+    "description": "PHP Client for Redislabs Redis Graph Module.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mehmet Korkmaz",
+            "email": "mehmet@mkorkmaz.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*",
+        "mkorkmaz/redislabs-common": "^0.1",
+        "sevenecks/tableify": "^0.0.5"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "roave/backward-compatibility-check": "^2.0",
+        "codeception/codeception": "^2.5",
+        "php-coveralls/php-coveralls": "^2.1",
+        "squizlabs/php_codesniffer": "^3.3",
+        "predis/predis": "^1.1",
+        "ext-redis": "*"
+    },
+    "suggest": {
+        "predis/predis": "If your application depends on predis.",
+        "ext-redis": "If your application depends of redis PCEL extention."
+    },
+    "autoload": {
+        "psr-4": {
+            "Redislabs\\Module\\RedisGraph\\": "src/RedisGraph"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "scripts": {
+        "unit-tests": "vendor/bin/codecept run unit --coverage",
+        "bc-check": "vendor/bin/roave-backward-compatibility-check",
+        "phpcs": "vendor/bin/phpcs --standard=PSR2 src tests",
+        "phpcbf": "vendor/bin/phpcbf --standard=PSR2 src tests",
+        "phpcs-object-calisthenics": "vendor/bin/phpcs src -sp --standard=vendor/object-calisthenics/phpcs-calisthenics-rules/src/ObjectCalisthenics/ruleset.xml"
+    }
+}
