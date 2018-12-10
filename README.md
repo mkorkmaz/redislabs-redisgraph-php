@@ -15,7 +15,7 @@ RedisGraph-PHP provides PHP Client for Redislabs' RedisGraph Module. This librar
 
 ## RedisGraph-PHP Interface
 
-You can run any Redis Query command using these functions. 
+You can run any RedisGraph Query command using these functions. 
 
 ```php
 <?php
