@@ -20,7 +20,7 @@ class RedisGraphTest extends \Codeception\Test\Unit
      * @var Predis\Client
      */
     private $redisClient;
-
+    // phpcs:disable
     protected function _before()
     {
         $this->redisClient = new Predis\Client();
@@ -31,7 +31,7 @@ class RedisGraphTest extends \Codeception\Test\Unit
     {
         $this->redisClient->flushall();
     }
-
+    // phpcs:enable
     /**
      * @test
      */
@@ -82,19 +82,39 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $this->assertEquals(7, $result->getPropertiesSet(), 'getPropertiesSet');
         $this->assertGreaterThan(0.00001, $result->getExecutionTime(), 'getExecutionTime');
 
+
+
+
+        $labelSource =  'person';
+        $labelDestination =  'country';
+
+        $propertiesSource = ['name' => 'Jane Doe', 'age' => 23, 'gender' => 'female', 'status' => 'engaged'];
+        $propertiesDestination = ['name' => 'Sweden'];
+        $edgeProperties = ['purpose' => 'pleasure', 'duration' => 'one week'];
+
+        $person = Node::createWithLabel($labelSource)->withProperties($propertiesSource)->withAlias('CatOwner1');
+        $country = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination)
+            ->withAlias('CatCountry1');
+
+        $edge = Edge::create($person, 'visited', $country)->withProperties($edgeProperties);
+
+        $graph = new GraphConstructor('TRAVELLERS');
+            $graph->addNode($person);
+        $graph->addNode($country);
+        $graph->addEdge($edge);
+        $commitQuery = $graph->getCommitQuery();
+        $this->redisGraph->commit($commitQuery);
+
+
         $matchQueryString = 'MATCH (p:person)-[v:visited {purpose:"pleasure"}]->(c:country)
 		   RETURN p.name, p.age, v.purpose, c.name';
         $matchQuery = new Query('TRAVELLERS', $matchQueryString);
-        $explain = $this->redisGraph->explain($matchQuery);
-        $this->assertContains('Produce Results', $explain);
-        $this->assertContains('Filter', $explain);
-        $this->assertContains('Conditional Traverse', $explain);
-        $this->assertContains('Node By Label Scan', $explain);
 
         $result = $this->redisGraph->query($matchQuery);
         ob_start();
         $result->prettyPrint();
         $content = ob_get_clean();
+        echo $content;
         $this->assertContains('-----------------------------------------', $content, 'PrettyPrint');
         $this->assertContains('| p.name   | p.age | v.purpose | c.name |', $content, 'PrettyPrint');
         $this->assertContains('| John Doe | 33    | pleasure  | Japan  |', $content, 'PrettyPrint');
