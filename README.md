@@ -172,7 +172,7 @@ $queryBuilder = new QueryBuilder();
 
 $queryBuilder->addMatch()
     ->addNode('p', 'person')
-    ->relation('v', 'visited', ['purpose'=>'pleasure'])->right()
+    ->relation('v', 'visited', ['purpose' => 'pleasure'])->right()
     ->node('c', 'country');
 
 $matchQueryString = $queryBuilder->getQuery('p.name', 'p.age', 'v.purpose', 'c.name');
