@@ -129,7 +129,7 @@ $matchQueryString = 'MATCH (p:person)-[v:visited {purpose:"pleasure"}]->(c:count
 	RETURN p.name, p.age, v.purpose, c.name';
 $matchQuery = new Query('TRAVELLERS', $matchQueryString);
 
-$result = $this->redisGraph->query($matchQuery);
+$result = $redisGraph->query($matchQuery);
 $resultSet = $result->getResultSet();
 
 var_dump($resultSet[0]) // Dumps column labels
