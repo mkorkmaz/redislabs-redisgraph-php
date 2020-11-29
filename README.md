@@ -36,7 +36,7 @@ interface RedisGraph
 
 ## Installation
 
-The recommended method to installing RedisGraph-PHP is with composer.
+The recommended method to install RedisGraph-PHP is with composer.
 
 ```bash
 composer require mkorkmaz/redislabs-redisgraph-php
