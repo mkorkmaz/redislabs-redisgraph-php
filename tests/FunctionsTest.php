@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace RedislabsModulesTest;
@@ -14,11 +15,11 @@ class FunctionsTest extends \Codeception\Test\Unit
      * But we can generate plenty number of random strings and make sure there is no collision.
      * In our case, probability of generating same string is 1/(52^10).
      */
-    public function randomStringFunctionShouldReturnRandomStrings() : void
+    public function randomStringFunctionShouldReturnRandomStrings(): void
     {
         $randomStrings = [];
 
-        for ($i=0; $i<1000; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $newString  = randomString();
             $this->assertArrayNotHasKey($newString, $randomStrings);
             $randomStrings[$newString] = 1;
@@ -28,7 +29,7 @@ class FunctionsTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function quotedStringFunctionsShouldQuotedString() : void
+    public function quotedStringFunctionsShouldQuotedString(): void
     {
         $this->assertEquals('"Kedibey"', quotedString('Kedibey'));
     }

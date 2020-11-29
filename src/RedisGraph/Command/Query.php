@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\RedisGraph\Command;
@@ -13,10 +14,10 @@ final class Query extends CommandAbstract implements CommandInterface
 
     private function __construct(string $name, string $queryString)
     {
-        $this->arguments = [$name, $queryString];
+        $this->arguments = [$name, $queryString, ' --compact'];
     }
 
-    public static function createCommandWithArguments(QueryInterface $query) : CommandInterface
+    public static function createCommandWithArguments(QueryInterface $query): CommandInterface
     {
         return new self($query->getName(), $query->getQueryString());
     }

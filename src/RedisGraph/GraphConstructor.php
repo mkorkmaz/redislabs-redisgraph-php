@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\RedisGraph;
@@ -7,21 +8,21 @@ use Redislabs\Module\RedisGraph\Interfaces\QueryInterface;
 
 class GraphConstructor
 {
-    private $name;
-    private $nodes = [];
-    private $edges = [];
+    private string $name;
+    private array $nodes = [];
+    private array $edges = [];
 
     public function __construct(string $name)
     {
         $this->name = $name;
     }
 
-    public function addNode(Node $node) : void
+    public function addNode(Node $node): void
     {
         $this->nodes[] = $node;
     }
 
-    public function addEdge(Edge $edge) : void
+    public function addEdge(Edge $edge): void
     {
         $this->edges[] = $edge;
     }
@@ -35,7 +36,7 @@ class GraphConstructor
         $edgeCount = count($this->edges);
         foreach ($this->edges as $index => $edge) {
             $query .= $edge->toString();
-            if ($index < $edgeCount-1) {
+            if ($index < $edgeCount - 1) {
                 $query .= ', ';
             }
         }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\RedisGraph;
@@ -9,61 +10,75 @@ class Result
 {
     private $resultSet;
     private $statistics;
+    private $labels;
 
-    public function __construct(array $resultSet, Statistics $statistics)
+    public function __construct(?array $labels, ?array $resultSet, Statistics $statistics)
     {
+        $this->labels = $labels;
         $this->resultSet = $resultSet;
         $this->statistics = $statistics->getResultStatistics();
     }
 
-    public static function createFromResponse(array $response) : self
+    public static function createFromResponse(array $response): self
     {
-        return new self($response[0], new Statistics($response[1]));
+        $stats = $response[2] ?? $response[0];
+        $resultKeys = isset($response[1]) ? $response[0] : [];
+        $resultSet = $response[1] ?? [];
+        return new self($resultKeys, $resultSet, new Statistics($stats));
     }
 
-    public function getResultSet() : array
+    public function getResultSet(): array
     {
         return $this->resultSet;
     }
+    public function getLabels(): array
+    {
+        return $this->labels;
+    }
 
-    public function getLabelsAdded() : int
+
+    public function getLabelsAdded(): int
     {
         return $this->statistics['LABELS_ADDED'];
     }
 
-    public function getNodesCreated() : int
+    public function getNodesCreated(): int
     {
         return $this->statistics['NODES_CREATED'];
     }
 
-    public function getNodesDeleted() : int
+    public function getNodesDeleted(): int
     {
         return $this->statistics['NODES_DELETED'];
     }
 
-    public function getRelationshipsCreated() : int
+    public function getRelationshipsCreated(): int
     {
         return $this->statistics['RELATIONSHIPS_CREATED'];
     }
 
-    public function getRelationshipsDeleted() : int
+    public function getRelationshipsDeleted(): int
     {
         return $this->statistics['RELATIONSHIPS_DELETED'];
     }
 
-    public function getExecutionTime() : float
+    public function getExecutionTime(): float
     {
         return $this->statistics['INTERNAL_EXECUTION_TIME'];
     }
 
-    public function getPropertiesSet() : int
+    public function getPropertiesSet(): int
     {
         return $this->statistics['PROPERTIES_SET'];
     }
-
-    public function prettyPrint() :void
+    public function getCachedExecution(): int
     {
-        $table = Tableify::new($this->resultSet);
+        return $this->statistics['CACHED_EXECUTION'];
+    }
+
+    public function prettyPrint(): void
+    {
+        $table = Tableify::new(array_merge([$this->labels], $this->resultSet));
         $table = $table->make();
         $tableData = $table->toArray();
         foreach ($tableData as $row) {

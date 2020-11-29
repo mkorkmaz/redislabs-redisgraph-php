@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\RedisGraph;
@@ -13,7 +14,8 @@ use Redislabs\Module\RedisGraph\Command\Delete;
 class RedisGraph implements ModuleInterface
 {
     use ModuleTrait;
-    protected static $moduleName = 'RedisGraph';
+
+    protected static string $moduleName = 'RedisGraph';
 
 
     public function rawQuery(QueryInterface $query)
@@ -23,26 +25,29 @@ class RedisGraph implements ModuleInterface
         );
     }
 
-    public function query(QueryInterface $query) : Result
+    public function query(QueryInterface $query): Result
     {
-        return Result::createFromResponse($this->rawQuery($query));
+        $response = $this->rawQuery($query);
+
+        return Result::createFromResponse($response);
     }
 
-    public function delete(string $name) : ?string
+    public function delete(string $name): ?string
     {
         return $this->runCommand(
             Delete::createCommandWithArguments($name)
         );
     }
 
-    public function explain(QueryInterface $query) : string
+    public function explain(QueryInterface $query): string
     {
-        return $this->runCommand(
+        $response =  $this->runCommand(
             Explain::createCommandWithArguments($query)
         );
+        return implode(' ', $response);
     }
 
-    public function commit(QueryInterface $query) : Result
+    public function commit(QueryInterface $query): Result
     {
         return $this->query($query);
     }

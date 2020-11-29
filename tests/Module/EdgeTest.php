@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace RedislabsModulesTest\Module;
 
 use Redislabs\Module\RedisGraph\Edge;
@@ -11,7 +13,7 @@ class EdgeTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldCreateEdgeObjectUsingNamedConstructorsSuccessfully() : void
+    public function shouldCreateEdgeObjectUsingNamedConstructorsSuccessfully(): void
     {
         $labelSource =  'person';
         $labelDestination =  'country';

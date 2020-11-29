@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace RedislabsModulesTest\Module;
@@ -12,7 +13,7 @@ class NodeTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldCreateNodeObjectUsingNamedConstructorsSuccessfully() : void
+    public function shouldCreateNodeObjectUsingNamedConstructorsSuccessfully(): void
     {
         $label1 =  'person';
         $label2 =  'country';

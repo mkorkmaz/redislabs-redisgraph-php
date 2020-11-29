@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\RedisGraph\Command;
@@ -15,7 +16,7 @@ final class Delete extends CommandAbstract implements CommandInterface
         $this->arguments = [$name];
     }
 
-    public static function createCommandWithArguments(string $name) : CommandInterface
+    public static function createCommandWithArguments(string $name): CommandInterface
     {
         return new self($name);
     }

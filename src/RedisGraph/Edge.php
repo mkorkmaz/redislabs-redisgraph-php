@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\RedisGraph;
@@ -19,12 +20,12 @@ final class Edge
         $this->properties = $properties;
     }
 
-    public static function create(Node $sourceNode, string $relation, Node $destinationNode) : self
+    public static function create(Node $sourceNode, string $relation, Node $destinationNode): self
     {
         return new self($sourceNode, $relation, $destinationNode);
     }
 
-    public function withProperties(iterable $properties) : self
+    public function withProperties(iterable $properties): self
     {
         $new = clone $this;
         $new->properties = $properties;
@@ -46,7 +47,7 @@ final class Edge
         return $edgeString;
     }
 
-    private function getProps(iterable $properties) : string
+    private function getProps(iterable $properties): string
     {
         $props = '';
         foreach ($properties as $propKey => $propValue) {

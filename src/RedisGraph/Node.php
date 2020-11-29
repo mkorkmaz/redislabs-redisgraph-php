@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\RedisGraph;
@@ -15,58 +16,58 @@ final class Node
         $this->properties = $properties;
     }
 
-    public static function create() : self
+    public static function create(): self
     {
         return new self();
     }
 
-    public static function createWithLabel(string $label) : self
+    public static function createWithLabel(string $label): self
     {
         return new self($label);
     }
 
-    public static function createWithLabelAndProperties(string $label, iterable $properties) : self
+    public static function createWithLabelAndProperties(string $label, iterable $properties): self
     {
         return new self($label, $properties);
     }
 
-    public function withLabel(string $label) : self
+    public function withLabel(string $label): self
     {
         $new = clone $this;
         $new->label = $label;
         return $new;
     }
 
-    public function withProperties(iterable $properties) : self
+    public function withProperties(iterable $properties): self
     {
         $new = clone $this;
         $new->properties = $properties;
         return $new;
     }
 
-    public function withAlias(string $alias) : self
+    public function withAlias(string $alias): self
     {
         $new = clone $this;
         $new->alias = $alias;
         return $new;
     }
 
-    public function getAlias() : string
+    public function getAlias(): string
     {
         return $this->alias ?? randomString();
     }
 
-    public function getLabel() : ?string
+    public function getLabel(): ?string
     {
         return $this->label;
     }
 
-    public function getProperties() : iterable
+    public function getProperties(): iterable
     {
         return $this->properties;
     }
 
-    public function toString() : string
+    public function toString(): string
     {
         $nodeString = '(';
         if ($this->alias !== null) {
@@ -82,7 +83,7 @@ final class Node
         return $nodeString;
     }
 
-    private function getProps(iterable $properties) : string
+    private function getProps(iterable $properties): string
     {
          $props = '';
         foreach ($properties as $propKey => $propValue) {

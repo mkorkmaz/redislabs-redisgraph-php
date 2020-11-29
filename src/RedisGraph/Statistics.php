@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Redislabs\Module\RedisGraph;
@@ -12,15 +13,17 @@ class Statistics
         'RELATIONSHIPS_CREATED' => 0,
         'RELATIONSHIPS_DELETED' => 0,
         'PROPERTIES_SET' => 0,
+        'CACHED_EXECUTION' => 0,
         'INTERNAL_EXECUTION_TIME' => '0.0'
     ];
     private static $availableStatistics = [
         'Labels added' => 'LABELS_ADDED',
         'Nodes created' => 'NODES_CREATED',
-        'Nodes deleted' =>'NODES_DELETED',
-        'Relationships deleted' =>'RELATIONSHIPS_DELETED',
-        'Properties set' =>'PROPERTIES_SET',
-        'Relationships created' =>'RELATIONSHIPS_CREATED',
+        'Nodes deleted' => 'NODES_DELETED',
+        'Cached execution' => 'CACHED_EXECUTION',
+        'Relationships deleted' => 'RELATIONSHIPS_DELETED',
+        'Properties set' => 'PROPERTIES_SET',
+        'Relationships created' => 'RELATIONSHIPS_CREATED',
         'Query internal execution time' => 'INTERNAL_EXECUTION_TIME',
     ];
 
@@ -34,8 +37,9 @@ class Statistics
         }
     }
 
-    private function getStat($stat) : ?array
+    private function getStat($stat): array
     {
+
         $statDetails = explode(':', $stat);
         $statName = self::$availableStatistics[$statDetails[0]];
         if ($statName === 'INTERNAL_EXECUTION_TIME') {
@@ -44,7 +48,7 @@ class Statistics
         return ['key' => $statName, 'value' => (int) $statDetails[1]];
     }
 
-    public function getResultStatistics() : array
+    public function getResultStatistics(): array
     {
         return $this->statistics;
     }

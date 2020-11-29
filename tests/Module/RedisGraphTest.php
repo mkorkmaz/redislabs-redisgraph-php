@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace RedislabsModulesTest\Module;
@@ -9,21 +10,16 @@ use Redislabs\Module\RedisGraph\RedisGraph;
 use Redislabs\Module\RedisGraph\Node;
 use Redislabs\Module\RedisGraph\Edge;
 use Redislabs\Module\RedisGraph\GraphConstructor;
+use Predis\Client as PredisClient;
 
 class RedisGraphTest extends \Codeception\Test\Unit
 {
-    /**
-     * @var RedisGraph
-     */
-    protected $redisGraph;
-    /**
-     * @var Predis\Client
-     */
-    private $redisClient;
+    protected RedisGraph $redisGraph;
+    private PredisClient $redisClient;
     // phpcs:disable
     protected function _before()
     {
-        $this->redisClient = new Predis\Client();
+        $this->redisClient = new PredisClient();
         $this->redisGraph = RedisGraph::createWithPredis($this->redisClient);
     }
 
@@ -35,17 +31,17 @@ class RedisGraphTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldGetRedisGraphModuleSuccessfully() : void
+    public function shouldGetRedisGraphModuleSuccessfully(): void
     {
         $this->assertInstanceOf(RedisGraph::class, $this->redisGraph, 'RedisGraph module init.');
     }
 
     /**
      * @test
-     * @expectedException \Redislabs\Exceptions\InvalidCommandException
      */
-    public function shouldFailForInvalidRedisGraphCommand() : void
+    public function shouldFailForInvalidRedisGraphCommand(): void
     {
+        $this->expectException(\Redislabs\Exceptions\InvalidCommandException::class);
         $this->redisGraph->invalidCommand('-test-');
     }
 
@@ -53,7 +49,7 @@ class RedisGraphTest extends \Codeception\Test\Unit
     /**
      * @test
      */
-    public function shouldReturnQueryExecuteResultsSuccessfully() : void
+    public function shouldReturnQueryExecuteResultsSuccessfully(): void
     {
         $labelSource =  'person';
         $labelDestination =  'country';
@@ -91,28 +87,29 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $matchQuery = new Query('TRAVELLERS', $matchQueryString);
 
         $explain = $this->redisGraph->explain($matchQuery);
-        $this->assertContains('Produce Results', $explain);
-        $this->assertContains('Filter', $explain);
-        $this->assertContains('Conditional Traverse', $explain);
-        $this->assertContains('Node By Label Scan', $explain);
+        $this->assertStringContainsString('Results', $explain);
+        $this->assertStringContainsString('Filter', $explain);
+        $this->assertStringContainsString('Conditional Traverse', $explain);
+        $this->assertStringContainsString('Node By Label Scan', $explain);
 
         $result = $this->redisGraph->query($matchQuery);
         ob_start();
         $result->prettyPrint();
         $content = ob_get_clean();
         echo $content;
-        $this->assertContains('-----------------------------------------', $content, 'PrettyPrint');
-        $this->assertContains('| p.name   | p.age | v.purpose | c.name |', $content, 'PrettyPrint');
-        $this->assertContains('| John Doe | 33    | pleasure  | Japan  |', $content, 'PrettyPrint');
+        $this->assertStringContainsString('-----------------------------------------', $content, 'PrettyPrint');
+        $this->assertStringContainsString('| p.name   | p.age | v.purpose | c.name |', $content, 'PrettyPrint');
+        $this->assertStringContainsString('| John Doe | 33    | pleasure  | Japan  |', $content, 'PrettyPrint');
 
         $resultSet = $result->getResultSet();
-        $this->assertEquals('p.name', $resultSet[0][0]);
-        $this->assertEquals('John Doe', $resultSet[1][0]);
+        $labels = $result->getLabels();
+        $this->assertEquals('p.name', $labels[0]);
+        $this->assertEquals('John Doe', $resultSet[0][0]);
 
         $delete = $this->redisGraph->delete('TRAVELLERS');
-        $this->assertContains('Graph removed', $delete);
+        $this->assertStringContainsString('Graph removed', $delete);
 
         $deleteNonExistingGraph = $this->redisGraph->delete('TRAVELLERS');
-        $this->assertContains('Graph was not found', $deleteNonExistingGraph);
+        $this->assertStringContainsString('ERR Invalid graph operation on empty key', $deleteNonExistingGraph);
     }
 }
