@@ -41,6 +41,7 @@
         ]
     },
     "scripts": {
+        "commit": "vendor/bin/php-commitizen commit",
         "unit-tests": "vendor/bin/codecept run unit --coverage",
         "phpstan": "vendor/bin/phpstan analyse -l 4 src",
         "phpcs": "vendor/bin/phpcs --standard=PSR12 src tests",
