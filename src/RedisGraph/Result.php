@@ -8,9 +8,9 @@ use SevenEcks\Tableify\Tableify;
 
 class Result
 {
-    private $resultSet;
-    private $statistics;
-    private $labels;
+    private ?array $resultSet;
+    private array $statistics;
+    private ?array $labels;
 
     public function __construct(?array $labels, ?array $resultSet, Statistics $statistics)
     {

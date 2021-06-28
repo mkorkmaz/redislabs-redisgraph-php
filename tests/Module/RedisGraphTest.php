@@ -78,10 +78,6 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $this->assertEquals(7, $result->getPropertiesSet(), 'getPropertiesSet');
         $this->assertGreaterThan(0.00001, $result->getExecutionTime(), 'getExecutionTime');
 
-
-
-
-
         $matchQueryString = 'MATCH (p:person)-[v:visited {purpose:"pleasure"}]->(c:country)
 		   RETURN p.name, p.age, v.purpose, c.name';
         $matchQuery = new Query('TRAVELLERS', $matchQueryString);

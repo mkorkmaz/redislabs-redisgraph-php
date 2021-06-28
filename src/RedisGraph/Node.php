@@ -6,9 +6,9 @@ namespace Redislabs\Module\RedisGraph;
 
 final class Node
 {
-    private $label;
-    private $properties;
-    private $alias;
+    private ?string $label;
+    private ?iterable $properties;
+    private ?string $alias;
 
     public function __construct(?string $label = null, ?iterable $properties = null)
     {
@@ -90,8 +90,17 @@ final class Node
             if ($props !== '') {
                 $props .= ', ';
             }
-            $props .= $propKey . ': ' . quotedString((string) $propValue);
+            $props .= $propKey . ': ' . $this->getPropValueWithDataType($propValue);
         }
         return $props;
+    }
+
+    private function getPropValueWithDataType($propValue)
+    {
+        $type = gettype($propValue);
+        if ($type === 'string') {
+            return quotedString((string) $propValue);
+        }
+        return (int) $propValue;
     }
 }

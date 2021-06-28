@@ -7,12 +7,12 @@ namespace Redislabs\Module\RedisGraph;
 final class Edge
 {
 
-    private $sourceNode;
-    private $destinationNode;
-    private $relation;
-    private $properties;
+    private Node $sourceNode;
+    private Node $destinationNode;
+    private ?string $relation;
+    private ?iterable $properties = [];
 
-    public function __construct(Node $sourceNode, string $relation, Node $destinationNode, ?iterable $properties = [])
+    public function __construct(Node $sourceNode, ?string $relation, Node $destinationNode, ?iterable $properties = [])
     {
         $this->sourceNode = $sourceNode;
         $this->destinationNode = $destinationNode;
@@ -54,8 +54,17 @@ final class Edge
             if ($props !== '') {
                 $props .= ', ';
             }
-            $props .= $propKey . ': ' . quotedString((string) $propValue);
+            $props .= $propKey . ': ' . $this->getPropValueWithDataType($propValue);
         }
         return $props;
+    }
+
+    private function getPropValueWithDataType($propValue)
+    {
+        $type = gettype($propValue);
+        if ($type === 'string') {
+            return quotedString((string) $propValue);
+        }
+        return (int) $propValue;
     }
 }

@@ -8,8 +8,8 @@ use Redislabs\Module\RedisGraph\Interfaces\QueryInterface;
 
 final class Query implements QueryInterface
 {
-    private $name;
-    private $queryString;
+    private string $name;
+    private string $queryString;
 
     public function __construct(string $name, string $queryString)
     {

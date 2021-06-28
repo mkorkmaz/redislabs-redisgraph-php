@@ -36,7 +36,7 @@ class GraphConstructorTest extends \Codeception\Test\Unit
         $graph->addEdge($edge);
         $query = $graph->getCommitQuery();
         $this->assertEquals(
-            'CREATE (CatOwner:person {name: "John Doe", age: "33", gender: "male", status: "single"}), ' .
+            'CREATE (CatOwner:person {name: "John Doe", age: 33, gender: "male", status: "single"}), ' .
             '(CatCountry:country {name: "Japan"}), ' .
             '(CatOwner:person)-[:visited {purpose: "pleasure", duration: "two weeks"}]->(CatCountry:country)',
             $query->getQueryString()

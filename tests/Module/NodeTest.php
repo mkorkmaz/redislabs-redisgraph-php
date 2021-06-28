@@ -51,7 +51,7 @@ class NodeTest extends \Codeception\Test\Unit
         );
 
         $this->assertEquals(
-            '(CatOwner:person {name: "John Doe", age: "33", gender: "male", status: "single"})',
+            '(CatOwner:person {name: "John Doe", age: 33, gender: "male", status: "single"})',
             $node2->toString()
         );
     }

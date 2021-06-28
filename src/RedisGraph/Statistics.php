@@ -6,7 +6,7 @@ namespace Redislabs\Module\RedisGraph;
 
 class Statistics
 {
-    private $statistics = [
+    private array $statistics = [
         'LABELS_ADDED' => 0,
         'NODES_CREATED' => 0,
         'NODES_DELETED' => 0,
@@ -16,7 +16,7 @@ class Statistics
         'CACHED_EXECUTION' => 0,
         'INTERNAL_EXECUTION_TIME' => '0.0'
     ];
-    private static $availableStatistics = [
+    private static array $availableStatistics = [
         'Labels added' => 'LABELS_ADDED',
         'Nodes created' => 'NODES_CREATED',
         'Nodes deleted' => 'NODES_DELETED',
