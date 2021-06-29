@@ -7,6 +7,12 @@ build:
       tests:
         override:
           - php-scrutinizer-run
+  services:
+    redisgraph:
+      image: redislabs/redisgraph:latest
+      ports:
+        - 6379
+
   environment:
     docker: true
     php:
@@ -15,9 +21,6 @@ build:
         - igbinary
         - redis
   tests:
-    before:
-      - 'docker run -p 6379:6379 --name redis-redisgraph redislabs/redisgraph:latest'
-    override:
       -
         command: 'composer run unit-tests'
         coverage:
