@@ -78,8 +78,38 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $this->assertEquals(7, $result->getPropertiesSet(), 'getPropertiesSet');
         $this->assertGreaterThan(0.00001, $result->getExecutionTime(), 'getExecutionTime');
 
+
+        $propertiesSource = ['name' => 'Jane Doe', 'age' => 30, 'gender' => 'female', 'status' => 'single'];
+        $propertiesDestination = ['name' => 'Japan'];
+        $edgeProperties = ['purpose' => 'pleasure', 'duration' => 'one weeks'];
+
+        $person2 = Node::createWithLabel($labelSource)->withProperties($propertiesSource);
+        $country2 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination);
+        $edge2 = Edge::merge($person2, 'visited', $country2)->withProperties($edgeProperties);
+
+        $propertiesSource = ['name' => 'Kedibey', 'age' => 13, 'gender' => 'male', 'status' => 'single'];
+        $propertiesDestination = ['name' => 'Turkey'];
+        $edgeProperties = ['purpose' => 'living', 'duration' => 'whole life'];
+
+        $person3 = Node::createWithLabel($labelSource)->withProperties($propertiesSource);
+        $country3 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination);
+        $edge3 = Edge::merge($person3, 'visited', $country3)->withProperties($edgeProperties);
+
+        $graph = new GraphConstructor('TRAVELLERS');
+        $graph->addNode($person2);
+        $graph->addNode($country2);
+        $graph->addEdge($edge2);
+        $graph->addNode($person3);
+        $graph->addNode($country3);
+        $graph->addEdge($edge3);
+
+
+
+        $commitQuery = $graph->getCommitQueryWithMerge();
+        $this->redisGraph->commit($commitQuery);
+
         $matchQueryString = 'MATCH (p:person)-[v:visited {purpose:"pleasure"}]->(c:country)
-		   RETURN p.name, p.age, v.purpose, c.name';
+		   RETURN p.name, p.age, v.purpose, v.duration, c.name';
         $matchQuery = new Query('TRAVELLERS', $matchQueryString);
 
         $explain = $this->redisGraph->explain($matchQuery);
@@ -93,9 +123,18 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $result->prettyPrint();
         $content = ob_get_clean();
         echo $content;
-        $this->assertStringContainsString('-----------------------------------------', $content, 'PrettyPrint');
-        $this->assertStringContainsString('| p.name   | p.age | v.purpose | c.name |', $content, 'PrettyPrint');
-        $this->assertStringContainsString('| John Doe | 33    | pleasure  | Japan  |', $content, 'PrettyPrint');
+        $expectedLines = <<<EOT
+-----------------------------------------
+| p.name   | p.age | v.purpose | v.duration | c.name |
+| John Doe | 33    | pleasure  | two weeks  | Japan  |
+| Jane Doe | 30    | pleasure  | one weeks  | Japan  |
+EOT;
+        $lines = explode("\n", $expectedLines);
+
+        $this->assertStringContainsString($lines[0], $content, 'PrettyPrint');
+        $this->assertStringContainsString($lines[1], $content, 'PrettyPrint');
+        $this->assertStringContainsString($lines[2], $content, 'PrettyPrint');
+        $this->assertStringContainsString($lines[3], $content, 'PrettyPrint');
 
         $resultSet = $result->getResultSet();
         $labels = $result->getLabels();

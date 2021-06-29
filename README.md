@@ -118,6 +118,34 @@ var_dump($result->getRelationshipsDeleted()); // int(0)
 var_dump($result->getPropertiesSet()); // int(7)
 var_dump($result->getExecutionTime()); // float(0.9785)
 
+
+$propertiesSource = ['name' => 'Jane Doe', 'age' => 30, 'gender' => 'female', 'status' => 'single'];
+$propertiesDestination = ['name' => 'Japan'];
+$edgeProperties = ['purpose' => 'pleasure', 'duration' => 'one weeks'];
+
+$person2 = Node::createWithLabel($labelSource)->withProperties($propertiesSource);
+$country2 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination);
+$edge2 = Edge::merge($person2, 'visited', $country2)->withProperties($edgeProperties);
+
+$propertiesSource = ['name' => 'Kedibey', 'age' => 13, 'gender' => 'male', 'status' => 'single'];
+$propertiesDestination = ['name' => 'Turkey'];
+$edgeProperties = ['purpose' => 'living', 'duration' => 'whole life'];
+
+$person3 = Node::createWithLabel($labelSource)->withProperties($propertiesSource);
+$country3 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination);
+$edge3 = Edge::merge($person3, 'visited', $country3)->withProperties($edgeProperties);
+
+$graph = new GraphConstructor('TRAVELLERS');
+$graph->addNode($person2);
+$graph->addNode($country2);
+$graph->addEdge($edge2);
+$graph->addNode($person3);
+$graph->addNode($country3);
+$graph->addEdge($edge3);
+
+$commitQuery = $graph->getCommitQueryWithMerge();
+$this->redisGraph->commit($commitQuery);
+
 ```
 
 ### Querying a Graph.
@@ -126,7 +154,7 @@ var_dump($result->getExecutionTime()); // float(0.9785)
 use Redislabs\Module\RedisGraph\Query;
 
 $matchQueryString = 'MATCH (p:person)-[v:visited {purpose:"pleasure"}]->(c:country)
-	RETURN p.name, p.age, v.purpose, c.name';
+	RETURN p.name, p.age, v.purpose, v.duration, c.name';
 $matchQuery = new Query('TRAVELLERS', $matchQueryString);
 
 $result = $redisGraph->query($matchQuery);
@@ -141,11 +169,12 @@ $result->prettyPrint();
 
 /* Prints
 
------------------------------------------
-| p.name   | p.age | v.purpose | c.name | 
------------------------------------------
-| John Doe | 33    | pleasure  | Japan  | 
------------------------------------------
+------------------------------------------------------
+| p.name   | p.age | v.purpose | v.duration | c.name | 
+------------------------------------------------------
+| John Doe | 33    | pleasure  | two weeks  | Japan  | 
+| Jane Doe | 30    | pleasure  | one weeks  | Japan  | 
+------------------------------------------------------
 
 */
 

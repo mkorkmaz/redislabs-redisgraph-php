@@ -6,6 +6,7 @@ namespace Redislabs\Module\RedisGraph;
 
 use Redislabs\Interfaces\ModuleInterface;
 use Redislabs\Module\ModuleTrait;
+use Redislabs\Module\RedisGraph\Exception\InvalidQueryException;
 use Redislabs\Module\RedisGraph\Interfaces\QueryInterface;
 use Redislabs\Module\RedisGraph\Command\Query;
 use Redislabs\Module\RedisGraph\Command\Explain;
@@ -28,7 +29,9 @@ class RedisGraph implements ModuleInterface
     public function query(QueryInterface $query): Result
     {
         $response = $this->rawQuery($query);
-
+        if (is_string($response)) {
+            throw new InvalidQueryException($response);
+        }
         return Result::createFromResponse($response);
     }
 

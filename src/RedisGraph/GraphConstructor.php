@@ -42,4 +42,16 @@ class GraphConstructor
         }
         return new Query($this->name, $query);
     }
+
+    public function getCommitQueryWithMerge(): QueryInterface
+    {
+        $query = '';
+        foreach ($this->nodes as $index => $node) {
+            $query .= 'MERGE ' . $node->toString() . ' ';
+        }
+        foreach ($this->edges as $index => $edge) {
+            $query .= 'MERGE ' . $edge->toString() . ' ';
+        }
+        return new Query($this->name, trim($query));
+    }
 }

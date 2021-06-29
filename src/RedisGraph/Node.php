@@ -8,11 +8,12 @@ final class Node
 {
     private ?string $label;
     private ?iterable $properties;
-    private ?string $alias;
+    private ?string $alias = null;
 
     public function __construct(?string $label = null, ?iterable $properties = null)
     {
         $this->label = $label;
+        $this->alias = randomString();
         $this->properties = $properties;
     }
 
@@ -54,7 +55,7 @@ final class Node
 
     public function getAlias(): string
     {
-        return $this->alias ?? randomString();
+        return $this->alias;
     }
 
     public function getLabel(): ?string
@@ -69,9 +70,9 @@ final class Node
 
     public function toString(): string
     {
-        $nodeString = '(';
+        $nodeString = '(' . $this->getAlias();
         if ($this->alias !== null) {
-            $nodeString .= $this->alias;
+          //  $nodeString .= $this->alias;
         }
         if ($this->label !== null) {
             $nodeString .= ':' . $this->label . ' ';

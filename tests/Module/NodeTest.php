@@ -22,7 +22,7 @@ class NodeTest extends \Codeception\Test\Unit
         $properties2 = ['name' => 'Japan'];
 
         $node1 = Node::create();
-        $this->assertEquals(null, $node1->getLabel(), 'Node::create returns null label');
+        $this->assertEquals(null, $node1->getLabel(), 'Node::create returns random label');
         $this->assertEquals(10, strlen($node1->getAlias()), 'Node::create returns its random alias');
         $node1WithLabel = $node1->withLabel('DefinedLabel');
         $this->assertEquals(
