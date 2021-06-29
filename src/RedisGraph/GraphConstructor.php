@@ -9,7 +9,9 @@ use Redislabs\Module\RedisGraph\Interfaces\QueryInterface;
 class GraphConstructor
 {
     private string $name;
+    /** @var Node[]  */
     private array $nodes = [];
+    /** @var Edge[]  */
     private array $edges = [];
 
     public function __construct(string $name)
@@ -47,10 +49,10 @@ class GraphConstructor
     {
         $query = '';
         foreach ($this->nodes as $index => $node) {
-            $query .= 'MERGE ' . $node->toString() . ' ';
+            $query .= $node->getQueryPredicate() . ' ' . $node->toString() . ' ';
         }
         foreach ($this->edges as $index => $edge) {
-            $query .= 'MERGE ' . $edge->toString() . ' ';
+            $query .= $edge->getQueryPredicate() . ' ' . $edge->toString() . ' ';
         }
         return new Query($this->name, trim($query));
     }

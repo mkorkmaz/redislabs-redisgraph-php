@@ -9,12 +9,14 @@ final class Node
     private ?string $label;
     private ?iterable $properties;
     private ?string $alias = null;
+    private ?string $queryPredicate;
 
-    public function __construct(?string $label = null, ?iterable $properties = null)
+    public function __construct(?string $label = null, ?iterable $properties = null, ?string $queryPredicate = null)
     {
         $this->label = $label;
         $this->alias = randomString();
         $this->properties = $properties;
+        $this->queryPredicate = $queryPredicate;
     }
 
     public static function create(): self
@@ -50,6 +52,13 @@ final class Node
     {
         $new = clone $this;
         $new->alias = $alias;
+        return $new;
+    }
+
+    public function withQueryPredicate(string $queryPredicate): self
+    {
+        $new = clone $this;
+        $new->queryPredicate = $queryPredicate;
         return $new;
     }
 
@@ -103,5 +112,10 @@ final class Node
             return quotedString((string) $propValue);
         }
         return (int) $propValue;
+    }
+
+    public function getQueryPredicate(): string
+    {
+        return $this->queryPredicate ?? 'MATCH';
     }
 }

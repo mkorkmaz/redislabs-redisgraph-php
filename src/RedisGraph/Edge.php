@@ -6,20 +6,20 @@ namespace Redislabs\Module\RedisGraph;
 
 final class Edge
 {
-    private string $type;
+    private string $queryPredicate;
     private Node $sourceNode;
     private Node $destinationNode;
     private ?string $relation;
     private ?iterable $properties = [];
 
     public function __construct(
-        string $type,
+        string $queryPredicate,
         Node $sourceNode,
         ?string $relation,
         Node $destinationNode,
         ?iterable $properties = []
     ) {
-        $this->type = $type;
+        $this->queryPredicate = $queryPredicate;
         $this->sourceNode = $sourceNode;
         $this->destinationNode = $destinationNode;
         $this->relation = $relation;
@@ -44,12 +44,12 @@ final class Edge
 
     public function getType(): string
     {
-        return $this->type;
+        return $this->queryPredicate;
     }
 
     public function toString(): string
     {
-        if ($this->type === 'MERGE') {
+        if ($this->queryPredicate === 'MERGE') {
             return $this->toStringWithMerge();
         }
         return $this->toStringWithCreate();
@@ -104,5 +104,10 @@ final class Edge
             return quotedString((string) $propValue);
         }
         return (int) $propValue;
+    }
+
+    public function getQueryPredicate(): string
+    {
+        return $this->queryPredicate;
     }
 }

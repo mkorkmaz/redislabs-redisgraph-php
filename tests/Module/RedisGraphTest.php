@@ -83,16 +83,20 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $propertiesDestination = ['name' => 'Japan'];
         $edgeProperties = ['purpose' => 'pleasure', 'duration' => 'one weeks'];
 
-        $person2 = Node::createWithLabel($labelSource)->withProperties($propertiesSource);
-        $country2 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination);
+        $person2 = Node::createWithLabel($labelSource)->withProperties($propertiesSource)
+            ->withQueryPredicate('MERGE');
+        $country2 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination)
+            ->withQueryPredicate('MERGE');
         $edge2 = Edge::merge($person2, 'visited', $country2)->withProperties($edgeProperties);
 
         $propertiesSource = ['name' => 'Kedibey', 'age' => 13, 'gender' => 'male', 'status' => 'single'];
         $propertiesDestination = ['name' => 'Turkey'];
         $edgeProperties = ['purpose' => 'living', 'duration' => 'whole life'];
 
-        $person3 = Node::createWithLabel($labelSource)->withProperties($propertiesSource);
-        $country3 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination);
+        $person3 = Node::createWithLabel($labelSource)->withProperties($propertiesSource)
+            ->withQueryPredicate('MERGE');
+        $country3 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination)
+            ->withQueryPredicate('MERGE');
         $edge3 = Edge::merge($person3, 'visited', $country3)->withProperties($edgeProperties);
 
         $graph = new GraphConstructor('TRAVELLERS');
@@ -141,6 +145,49 @@ EOT;
         $this->assertEquals('p.name', $labels[0]);
         $this->assertEquals('John Doe', $resultSet[0][0]);
 
+        // adding a relationship
+        $graph = clone $graph;
+        $edge4 = Edge::merge($person3, 'moved_to', $country3)->withProperties($edgeProperties);
+        $graph->addEdge($edge4);
+        $commitQuery = $graph->getCommitQueryWithMerge();
+        $this->redisGraph->commit($commitQuery);
+
+        $matchQueryString = 'MATCH (p:person)-[v:moved_to {purpose:"living"}]->(c:country)
+		   RETURN p.name, p.age, v.duration, c.name';
+        $matchQuery = new Query('TRAVELLERS', $matchQueryString);
+
+        $explain = $this->redisGraph->explain($matchQuery);
+        $this->assertStringContainsString('Results', $explain);
+        $this->assertStringContainsString('Filter', $explain);
+        $this->assertStringContainsString('Conditional Traverse', $explain);
+        $this->assertStringContainsString('Node By Label Scan', $explain);
+
+        $result = $this->redisGraph->query($matchQuery);
+        ob_start();
+        $result->prettyPrint();
+        $content = ob_get_clean();
+        echo $content;
+        $expectedLines = <<<EOT
+-----------------------------------------
+| p.name  | p.age | v.duration | c.name | 
+-----------------------------------------
+| Kedibey | 13    | whole life | Turkey | 
+-----------------------------------------
+EOT;
+        $lines = explode("\n", $expectedLines);
+
+        $this->assertStringContainsString($lines[0], $content, 'PrettyPrint');
+        $this->assertStringContainsString($lines[1], $content, 'PrettyPrint');
+        $this->assertStringContainsString($lines[2], $content, 'PrettyPrint');
+        $this->assertStringContainsString($lines[3], $content, 'PrettyPrint');
+
+        $resultSet = $result->getResultSet();
+        $labels = $result->getLabels();
+        $this->assertEquals('p.name', $labels[0]);
+        $this->assertEquals('v.duration', $labels[2]);
+        $this->assertEquals('Kedibey', $resultSet[0][0]);
+
+        // @todo delete could be done in setup to reduce test flake
         $delete = $this->redisGraph->delete('TRAVELLERS');
         $this->assertStringContainsString('Graph removed', $delete);
 
