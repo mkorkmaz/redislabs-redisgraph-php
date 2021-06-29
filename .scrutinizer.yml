@@ -6,11 +6,7 @@ filter:
     - "tests/"
     -
 build:
-
   nodes:
-    redisgraph:
-      commands:
-        - 'docker run -p 6379:6379 --name redis-redisgraph redislabs/redisgraph:latest'
     analysis:
       environment:
         docker: true
@@ -22,7 +18,9 @@ build:
       tests:
         override:
           - php-scrutinizer-run
-
+    redisgraph:
+      commands:
+        - 'docker run -p 6379:6379 --name redis-redisgraph redislabs/redisgraph:latest'
   tests:
     -
       command: 'composer run unit-tests'
