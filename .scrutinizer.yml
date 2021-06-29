@@ -19,8 +19,7 @@ build:
       - 'docker run -p 6379:6379 --name redis-redisgraph redislabs/redisgraph:latest'
     override:
       -
-        command:
-          - 'composer run unit-tests'
+        command: 'composer run unit-tests'
         coverage:
           file: 'tests/_output/coverage.xml'
           format: 'clover'
