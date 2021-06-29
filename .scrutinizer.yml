@@ -8,19 +8,19 @@ filter:
 build:
   nodes:
     analysis:
-      environment:
-        docker: true
-        php:
-          version: 7.4
-          pecl_extensions:
-            - igbinary
-            - redis
       tests:
         override:
           - php-scrutinizer-run
     redisgraph:
       commands:
         - 'docker run -p 6379:6379 --name redis-redisgraph redislabs/redisgraph:latest'
+  environment:
+    docker: true
+    php:
+      version: 7.4
+      pecl_extensions:
+        - igbinary
+        - redis
   tests:
     -
       command: 'composer run unit-tests'
