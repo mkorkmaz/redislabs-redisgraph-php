@@ -8,7 +8,7 @@ build:
         override:
           - php-scrutinizer-run
   environment:
-  docker: true
+    docker: true
     php:
       version: 7.4
       pecl_extensions:
