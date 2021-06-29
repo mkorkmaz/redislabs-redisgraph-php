@@ -1,18 +1,11 @@
 # .scrutinizer.yml
 checks:
   php: true
+filter:
+  excluded_paths:
+    - "tests/"
+    -
 build:
-  nodes:
-    analysis:
-      services:
-        redisgraph:
-          image: redislabs/redisgraph:latest
-          ports:
-            - 6379
-      tests:
-        override:
-          - php-scrutinizer-run
-
   environment:
     docker: true
     php:
@@ -20,12 +13,20 @@ build:
       pecl_extensions:
         - igbinary
         - redis
+  nodes:
+    redisgraph:
+      commands:
+        - 'docker run -p 6379:6379 --name redis-redisgraph redislabs/redisgraph:latest'
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+
   tests:
-      -
-        command: 'composer run unit-tests'
-        coverage:
-          file: 'tests/_output/coverage.xml'
-          format: 'clover'
-filter:
-  excluded_paths:
-    - "tests/"
+    -
+      command: 'composer run unit-tests'
+      coverage:
+        file: 'tests/_output/coverage.xml'
+        format: 'clover'
+    - 'composer run phpcs'
+    - 'composer run phpstan'
