@@ -4,14 +4,14 @@ checks:
 build:
   nodes:
     analysis:
+      services:
+        redisgraph:
+          image: redislabs/redisgraph:latest
+          ports:
+            - 6379
       tests:
         override:
           - php-scrutinizer-run
-  services:
-    redisgraph:
-      image: redislabs/redisgraph:latest
-      ports:
-        - 6379
 
   environment:
     docker: true
