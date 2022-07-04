@@ -15,7 +15,7 @@ script:
   - export XDEBUG_MODE=coverage
   - vendor/bin/codecept run unit --coverage --coverage-xml
   - composer run phpcs
-  - composer run phpstan
+  - composer run psalm
 after_script:
   - if [ $TRAVIS_PHP_VERSION = '7.4' ]; then php vendor/bin/php-coveralls; fi
 after_success:

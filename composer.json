@@ -25,7 +25,8 @@
         "phpstan/phpstan": "^0.12.90",
         "codeception/module-asserts": "^1.3.1",
         "malukenho/mcbumpface": "^1.1.5",
-        "damianopetrungaro/php-commitizen": "^0.2.0"
+        "damianopetrungaro/php-commitizen": "^0.2.0",
+        "vimeo/psalm": "^4.8.1"
     },
     "suggest": {
         "predis/predis": "If your application depends on predis.",
@@ -43,7 +44,7 @@
     "scripts": {
         "commit": "vendor/bin/php-commitizen commit",
         "unit-tests": "vendor/bin/codecept run unit --coverage --coverage-xml",
-        "phpstan": "vendor/bin/phpstan analyse -l 4 src",
+        "psalm": "vendor/bin/psalm -l 1",
         "phpcs": "vendor/bin/phpcs --standard=PSR12 src tests",
         "phpcbf": "vendor/bin/phpcbf --standard=PSR12 src tests"
     }
