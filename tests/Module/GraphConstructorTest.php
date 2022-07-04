@@ -10,8 +10,6 @@ use Redislabs\Module\RedisGraph\GraphConstructor;
 
 class GraphConstructorTest extends \Codeception\Test\Unit
 {
-
-
     /**
      * @test
      */

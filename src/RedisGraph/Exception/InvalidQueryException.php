@@ -6,5 +6,4 @@ namespace Redislabs\Module\RedisGraph\Exception;
 
 class InvalidQueryException extends \RuntimeException
 {
-
 }

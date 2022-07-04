@@ -9,7 +9,6 @@ use ArrayIterator;
 
 class NodeTest extends \Codeception\Test\Unit
 {
-
     /**
      * @test
      */

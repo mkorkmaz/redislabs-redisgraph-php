@@ -54,7 +54,13 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $labelSource =  'person';
         $labelDestination =  'country';
 
-        $propertiesSource = ['name' => 'John Doe', 'age' => 33, 'weight' => 60.7, 'gender' => 'male', 'status' => 'single'];
+        $propertiesSource = [
+            'name' => 'John Doe',
+            'age' => 33,
+            'weight' => 60.7,
+            'gender' => 'male',
+            'status' => 'single'
+        ];
         $propertiesDestination = ['name' => 'Japan'];
         $edgeProperties = ['purpose' => 'pleasure', 'duration' => 'two weeks'];
 
@@ -79,7 +85,13 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $this->assertGreaterThan(0.00001, $result->getExecutionTime(), 'getExecutionTime');
 
 
-        $propertiesSource = ['name' => 'Jane Doe', 'age' => 30, 'weight' => 55.5, 'gender' => 'female', 'status' => 'single'];
+        $propertiesSource = [
+            'name' => 'Jane Doe',
+            'age' => 30,
+            'weight' => 55.5,
+            'gender' => 'female',
+            'status' => 'single'
+        ];
         $propertiesDestination = ['name' => 'Japan'];
         $edgeProperties = ['purpose' => 'pleasure', 'duration' => 'one weeks'];
 
@@ -87,7 +99,13 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $country2 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination);
         $edge2 = Edge::merge($person2, 'visited', $country2)->withProperties($edgeProperties);
 
-        $propertiesSource = ['name' => 'Kedibey', 'age' => 13, 'weight' => 30.4, 'gender' => 'male', 'status' => 'single'];
+        $propertiesSource = [
+            'name' => 'Kedibey',
+            'age' => 13,
+            'weight' => 30.4,
+            'gender' => 'male',
+            'status' => 'single'
+        ];
         $propertiesDestination = ['name' => 'Turkey'];
         $edgeProperties = ['purpose' => 'living', 'duration' => 'whole life'];
 
