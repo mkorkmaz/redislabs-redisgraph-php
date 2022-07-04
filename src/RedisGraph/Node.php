@@ -8,7 +8,7 @@ final class Node
 {
     private ?string $label;
     private ?iterable $properties;
-    private ?string $alias = null;
+    private string $alias;
 
     public function __construct(?string $label = null, ?iterable $properties = null)
     {
@@ -71,9 +71,6 @@ final class Node
     public function toString(): string
     {
         $nodeString = '(' . $this->getAlias();
-        if ($this->alias !== null) {
-          //  $nodeString .= $this->alias;
-        }
         if ($this->label !== null) {
             $nodeString .= ':' . $this->label . ' ';
         }
@@ -101,6 +98,9 @@ final class Node
         $type = gettype($propValue);
         if ($type === 'string') {
             return quotedString((string) $propValue);
+        }
+        if ($type === 'double') {
+            return (double) $propValue;
         }
         return (int) $propValue;
     }

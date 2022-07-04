@@ -54,7 +54,7 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $labelSource =  'person';
         $labelDestination =  'country';
 
-        $propertiesSource = ['name' => 'John Doe', 'age' => 33, 'gender' => 'male', 'status' => 'single'];
+        $propertiesSource = ['name' => 'John Doe', 'age' => 33, 'weight' => 60.7, 'gender' => 'male', 'status' => 'single'];
         $propertiesDestination = ['name' => 'Japan'];
         $edgeProperties = ['purpose' => 'pleasure', 'duration' => 'two weeks'];
 
@@ -75,11 +75,11 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $this->assertEquals(0, $result->getNodesDeleted(), 'getNodesDeleted');
         $this->assertEquals(1, $result->getRelationshipsCreated(), 'getRelationshipsCreated');
         $this->assertEquals(0, $result->getRelationshipsDeleted(), 'getRelationshipsDeleted');
-        $this->assertEquals(7, $result->getPropertiesSet(), 'getPropertiesSet');
+        $this->assertEquals(8, $result->getPropertiesSet(), 'getPropertiesSet');
         $this->assertGreaterThan(0.00001, $result->getExecutionTime(), 'getExecutionTime');
 
 
-        $propertiesSource = ['name' => 'Jane Doe', 'age' => 30, 'gender' => 'female', 'status' => 'single'];
+        $propertiesSource = ['name' => 'Jane Doe', 'age' => 30, 'weight' => 55.5, 'gender' => 'female', 'status' => 'single'];
         $propertiesDestination = ['name' => 'Japan'];
         $edgeProperties = ['purpose' => 'pleasure', 'duration' => 'one weeks'];
 
@@ -87,7 +87,7 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $country2 = Node::createWithLabelAndProperties($labelDestination, $propertiesDestination);
         $edge2 = Edge::merge($person2, 'visited', $country2)->withProperties($edgeProperties);
 
-        $propertiesSource = ['name' => 'Kedibey', 'age' => 13, 'gender' => 'male', 'status' => 'single'];
+        $propertiesSource = ['name' => 'Kedibey', 'age' => 13, 'weight' => 30.4, 'gender' => 'male', 'status' => 'single'];
         $propertiesDestination = ['name' => 'Turkey'];
         $edgeProperties = ['purpose' => 'living', 'duration' => 'whole life'];
 
@@ -109,7 +109,7 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $this->redisGraph->commit($commitQuery);
 
         $matchQueryString = 'MATCH (p:person)-[v:visited {purpose:"pleasure"}]->(c:country)
-		   RETURN p.name, p.age, v.purpose, v.duration, c.name';
+		   RETURN p.name, p.age, p.weight, v.purpose, v.duration, c.name';
         $matchQuery = new Query('TRAVELLERS', $matchQueryString);
 
         $explain = $this->redisGraph->explain($matchQuery);
@@ -124,10 +124,12 @@ class RedisGraphTest extends \Codeception\Test\Unit
         $content = ob_get_clean();
         echo $content;
         $expectedLines = <<<EOT
------------------------------------------
-| p.name   | p.age | v.purpose | v.duration | c.name |
-| John Doe | 33    | pleasure  | two weeks  | Japan  |
-| Jane Doe | 30    | pleasure  | one weeks  | Japan  |
+-----------------------------------------------------------------
+| p.name   | p.age | p.weight | v.purpose | v.duration | c.name | 
+-----------------------------------------------------------------
+| John Doe | 33    | 60.7     | pleasure  | two weeks  | Japan  | 
+| Jane Doe | 30    | 55.5     | pleasure  | one weeks  | Japan  | 
+-----------------------------------------------------------------
 EOT;
         $lines = explode("\n", $expectedLines);
 
@@ -140,6 +142,9 @@ EOT;
         $labels = $result->getLabels();
         $this->assertEquals('p.name', $labels[0]);
         $this->assertEquals('John Doe', $resultSet[0][0]);
+        $this->assertEquals(33, $resultSet[0][1]);
+        $this->assertEquals(60.7, $resultSet[0][2]);
+
 
         $delete = $this->redisGraph->delete('TRAVELLERS');
         $this->assertStringContainsString('Graph removed', $delete);
