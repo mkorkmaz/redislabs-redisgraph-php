@@ -6,24 +6,13 @@ namespace Redislabs\Module\RedisGraph;
 
 final class Edge
 {
-    private string $type;
-    private Node $sourceNode;
-    private Node $destinationNode;
-    private ?string $relation;
-    private ?iterable $properties = [];
-
     public function __construct(
-        string $type,
-        Node $sourceNode,
-        ?string $relation,
-        Node $destinationNode,
-        ?iterable $properties = []
+        private string $type,
+        private Node $sourceNode,
+        private ?string $relation,
+        private Node $destinationNode,
+        private ?iterable $properties = []
     ) {
-        $this->type = $type;
-        $this->sourceNode = $sourceNode;
-        $this->destinationNode = $destinationNode;
-        $this->relation = $relation;
-        $this->properties = $properties;
     }
 
     public static function create(Node $sourceNode, string $relation, Node $destinationNode): self

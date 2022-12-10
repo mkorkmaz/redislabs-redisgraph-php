@@ -8,14 +8,10 @@ use SevenEcks\Tableify\Tableify;
 
 class Result
 {
-    private ?array $resultSet;
     private array $statistics;
-    private ?array $labels;
 
-    public function __construct(?array $labels, ?array $resultSet, Statistics $statistics)
+    public function __construct(private ?array $labels, private ?array $resultSet, Statistics $statistics)
     {
-        $this->labels = $labels;
-        $this->resultSet = $resultSet;
         $this->statistics = $statistics->getResultStatistics();
     }
 

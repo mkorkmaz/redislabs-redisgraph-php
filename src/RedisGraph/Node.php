@@ -6,15 +6,11 @@ namespace Redislabs\Module\RedisGraph;
 
 final class Node
 {
-    private ?string $label;
-    private ?iterable $properties;
     private string $alias;
 
-    public function __construct(?string $label = null, ?iterable $properties = null)
+    public function __construct(private ?string $label = null, private ?iterable $properties = null)
     {
-        $this->label = $label;
         $this->alias = randomString();
-        $this->properties = $properties;
     }
 
     public static function create(): self
