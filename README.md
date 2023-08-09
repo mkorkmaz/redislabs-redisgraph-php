@@ -2,8 +2,10 @@
 
 RedisGraph-PHP provides PHP Client for Redislabs' RedisGraph Module. This library supports both widely used redis clients ([PECL Redis Extension](https://github.com/phpredis/phpredis/#readme) and [Predis](https://github.com/nrk/predis)).  
 
-
 [![Build Status](https://api.travis-ci.com/mkorkmaz/redislabs-redisgraph-php.svg?branch=master)](https://travis-ci.com/mkorkmaz/redislabs-redisgraph-php) [![Coverage Status](https://coveralls.io/repos/github/mkorkmaz/redislabs-redisgraph-php/badge.svg?branch=master)](https://coveralls.io/github/mkorkmaz/redislabs-redisgraph-php?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mkorkmaz/redislabs-redisgraph-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mkorkmaz/redislabs-redisgraph-php/?branch=master) [![Latest Stable Version](https://poser.pugx.org/mkorkmaz/redislabs-redisgraph-php/v/stable)](https://packagist.org/packages/mkorkmaz/redislabs-redisgraph-php) [![Total Downloads](https://poser.pugx.org/mkorkmaz/redislabs-redisgraph-php/downloads)](https://packagist.org/packages/mkorkmaz/redislabs-redisgraph-php) [![Latest Unstable Version](https://poser.pugx.org/mkorkmaz/redislabs-redisgraph-php/v/unstable)](https://packagist.org/packages/mkorkmaz/redislabs-redisgraph-php) [![License](https://poser.pugx.org/mkorkmaz/redislabs-redisgraph-php/license)](https://packagist.org/packages/mkorkmaz/redislabs-redisgraph-php)
+
+## Important
+Read this announcement details before decide to use this library: [RedisGraph End-of-Life Announcement](https://redis.com/blog/redisgraph-eol/)
 
 
 ## About RedisGraph
